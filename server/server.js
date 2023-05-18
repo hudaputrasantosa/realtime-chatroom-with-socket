@@ -21,6 +21,11 @@ io.on("connection", (socket) => {
   console.log(`User Connected ${socket.id}`);
 });
 
+socket.on("join_room", (data) => {
+  const { username, room } = data;
+  socket.join(room);
+});
+
 // ROUTING
 app.get("/", (req, res) => {
   res.send("Hello Dunia");
