@@ -50,6 +50,10 @@ socket.on("join_room", (data) => {
     username: CHAT_BOT,
     createdTime,
   });
+  
+// Listen for when the client connects via socket.io-client
+io.on("connection", (socket) => {
+  console.log(`User Connected ${socket.id}`);
 });
 
 // ROUTING
