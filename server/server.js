@@ -50,10 +50,11 @@ io.on("connection", (socket) => {
     socket.to(room).emit("chatroom_users", chatRoomUsers);
     socket.emit("chatroom_users", chatRoomUsers);
   });
-  
-// Listen for when the client connects via socket.io-client
-io.on("connection", (socket) => {
-  console.log(`User Connected ${socket.id}`);
+
+  // Listen for when the client connects via socket.io-client
+  io.on("connection", (socket) => {
+    console.log(`User Connected ${socket.id}`);
+  });
 });
 
 // ROUTING
