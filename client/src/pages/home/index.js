@@ -7,9 +7,9 @@ const Home = ({ username, setUsername, room, setRoom, socket }) => {
     if (room !== "" && username !== "") {
       socket.emit("join_room", { username, room });
     }
-  };
 
-  navigate("/chat", { replace: true });
+    navigate("/chat", { replace: true });
+  };
 
   return (
     <div className={styles.container}>
