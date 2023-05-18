@@ -24,36 +24,37 @@ let allUsers = [];
 io.on("connection", (socket) => {
   console.log(`User Connected ${socket.id}`);
 
-  socket.emit("receive_message", {
-    message: `Selamat Datang ${username}`,
-    username: CHAT_BOT,
-    createdTime,
+  // listen user join to room
+  socket.on("join_room", (data) => {
+    const { username, room } = data;
+    socket.join(room);
+
+    let createdTime = Date.now();
+    // send message to room if there is someone join to chat room
+    socket.to(room).emit("receive_message", {
+      message: `${username} telah bergabung ke room chat ${room}`,
+      username: CHAT_BOT,
+      createdTime,
+    });
+
+    socket.emit("receive_message", {
+      message: `Selamat Datang ${username}`,
+      username: CHAT_BOT,
+      createdTime,
+    });
+
+    chatRoom = room;
+    // store data user in temporary database
+    allUsers.push({ id: socket.id, username, room });
+    const chatRoomUsers = allUsers.filter((user) => user.room === room);
+    socket.to(room).emit("chatroom_users", chatRoomUsers);
+    socket.emit("chatroom_users", chatRoomUsers);
   });
 
-  chatRoom = room;
-  // store data user in temporary database
-  allUsers.push({ id: socket.id, username, room });
-  const chatRoomUsers = allUsers.filter((user) => user.room === room);
-  socket.to(room).emit("chatroom_users", chatRoomUsers);
-  socket.emit("chatroom_users", chatRoomUsers);
-});
-
-// listen user join to room
-socket.on("join_room", (data) => {
-  const { username, room } = data;
-  socket.join(room);
-
-  let createdTime = Date.now();
-  // send message to room if there is someone join to chat room
-  socket.to(room).emit("receive_message", {
-    message: `${username} telah bergabung ke room chat ${room}`,
-    username: CHAT_BOT,
-    createdTime,
+  // Listen for when the client connects via socket.io-client
+  io.on("connection", (socket) => {
+    console.log(`User Connected ${socket.id}`);
   });
-  
-// Listen for when the client connects via socket.io-client
-io.on("connection", (socket) => {
-  console.log(`User Connected ${socket.id}`);
 });
 
 // ROUTING
