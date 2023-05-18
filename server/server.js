@@ -21,6 +21,12 @@ const CHAT_BOT = "ChatBot";
 // Listen for when the client connects via socket.io-client
 io.on("connection", (socket) => {
   console.log(`User Connected ${socket.id}`);
+
+  socket.emit("receive_message", {
+    message: `Selamat Datang ${username}`,
+    username: CHAT_BOT,
+    createdTime,
+  });
 });
 
 // listen user join to room
