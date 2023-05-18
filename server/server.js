@@ -17,6 +17,8 @@ const io = new Server(server, {
 });
 
 const CHAT_BOT = "ChatBot";
+let chatRoom = "";
+let allUsers = [];
 
 // Listen for when the client connects via socket.io-client
 io.on("connection", (socket) => {
@@ -27,6 +29,13 @@ io.on("connection", (socket) => {
     username: CHAT_BOT,
     createdTime,
   });
+
+  chatRoom = room;
+  // store data user in temporary database
+  allUsers.push({ id: socket.id, username, room });
+  const chatRoomUsers = allUsers.filter((user) => user.room === room);
+  socket.to(room).emit("chatroom_users", chatRoomUsers);
+  socket.emit("chatroom_users", chatRoomUsers);
 });
 
 // listen user join to room
