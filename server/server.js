@@ -16,14 +16,25 @@ const io = new Server(server, {
   },
 });
 
+const CHAT_BOT = "ChatBot";
+
 // Listen for when the client connects via socket.io-client
 io.on("connection", (socket) => {
   console.log(`User Connected ${socket.id}`);
 });
 
+// listen user join to room
 socket.on("join_room", (data) => {
   const { username, room } = data;
   socket.join(room);
+
+  let createdTime = Date.now();
+  // send message to room if there is someone join to chat room
+  socket.to(room).emit("receive_message", {
+    message: `${username} telah bergabung ke room chat ${room}`,
+    username: CHAT_BOT,
+    createdTime,
+  });
 });
 
 // ROUTING
